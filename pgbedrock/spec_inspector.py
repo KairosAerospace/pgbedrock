@@ -8,6 +8,7 @@ import yaml
 
 from pgbedrock import common
 from pgbedrock import context
+from pgbedrock.jinja import add_filters
 
 DEPENDENT_OBJECTS_MSG = ('Spec error: Ownership listed for dependent {objkind}: {dep_objs}\n'
                          'Ownership for a dependent object derives from the object is depends '
@@ -428,6 +429,7 @@ def render_template(path):
         dir_path, filename = os.path.split(path)
         environment = jinja2.Environment(loader=jinja2.FileSystemLoader(dir_path),
                                          undefined=jinja2.StrictUndefined)
+        add_filters(environment)
         loaded = environment.get_template(filename)
         rendered = loaded.render(env=os.environ)
     except jinja2.exceptions.TemplateNotFound as err:
