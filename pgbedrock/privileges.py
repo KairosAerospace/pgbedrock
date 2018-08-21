@@ -44,6 +44,8 @@ def analyze_privileges(spec, cursor, verbose):
         personal_schemas = determine_personal_schemas(spec)
         all_sql_to_run = []
         for rolename, config in all_roles:
+            if config.get('ignore', False):
+                continue
             config = config or {}
             if dbcontext.is_superuser(rolename):
                 all_sql_to_run.append(

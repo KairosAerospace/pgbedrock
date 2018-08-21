@@ -67,6 +67,8 @@ def analyze_attributes(spec, cursor, verbose):
         password_all_sql_to_run = []
         for rolename, spec_config in all_roles:
             logger.debug('Starting to analyze role {}'.format(rolename))
+            if spec_config.get('ignore', False):
+                continue
 
             spec_config = spec_config or {}
             spec_attributes = spec_config.get('attributes', [])

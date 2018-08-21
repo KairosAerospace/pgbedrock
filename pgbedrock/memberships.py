@@ -25,6 +25,9 @@ def analyze_memberships(spec, cursor, verbose):
                            show_eta=False, item_show_func=common.item_show_func) as all_roles:
         all_sql_to_run = []
         for rolename, spec_config in all_roles:
+            if spec_config.get('ignore', False):
+                continue
+
             spec_config = spec_config or {}
             spec_memberships = set(spec_config.get('member_of', []))
             sql_to_run = MembershipAnalyzer(rolename, spec_memberships, dbcontext).analyze()

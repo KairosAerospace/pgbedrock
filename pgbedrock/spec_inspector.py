@@ -37,6 +37,8 @@ UNOWNED_SCHEMAS_MSG = ('Spec error: Schemas found in database with no owner in s
 VALIDATION_ERR_MSG = 'Spec error: Role "{}", field "{}": {}'
 
 SPEC_SCHEMA_YAML = """
+    ignore:
+        type: boolean
     can_login:
         type: boolean
     has_personal_schema:
