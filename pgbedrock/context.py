@@ -72,7 +72,7 @@ Q_GET_ALL_CURRENT_NONDEFAULTS = """
             JOIN relkind_mapping map
                 ON c.relkind = map.objkey
         WHERE
-            nsp.nspname NOT LIKE 'pg\_t%'
+            nsp.nspname NOT LIKE 'pg\_%'
             AND c.relacl IS NOT NULL
     ), schemas AS (
         SELECT
@@ -193,7 +193,7 @@ Q_GET_ALL_RAW_OBJECT_ATTRIBUTES = """
     JOIN pg_roles t_owner
         ON co.owner_id = t_owner.OID
     WHERE
-        co.schema NOT LIKE 'pg\_t%'
+        co.schema NOT LIKE 'pg\_%'
     ;
     """
 
