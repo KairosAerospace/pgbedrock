@@ -154,6 +154,12 @@ class AttributeAnalyzer(object):
                 val = spec_attribute[12:].strip()
                 converted_attributes['rolvaliduntil'] = val
 
+            elif spec_attribute.upper().startswith('IGNORE PASSWORD'):
+                # This is the case where we don't want to check the password, so
+                # set the 'rollpassword' attribute to False, which will cause
+                # the password comparison check to be skipped
+                converted_attributes['rolpassword'] = False
+
             elif 'PASSWORD' in spec_attribute.upper():
                 # Regardless whether the spec specified ENCRYPTED or UNENCRYPTED for the password,
                 # we throw this away as we will be storing the password in encrypted form
@@ -212,9 +218,12 @@ class AttributeAnalyzer(object):
         """ Verify that the role's attributes match the spec's, updating as necessary """
         for attribute, desired_value in attributes.items():
             current_value = self.get_attribute_value(attribute)
-            if attribute == 'rolpassword' and not self.is_same_password(desired_value):
-                logger.debug('Altering password for role "{}"'.format(self.rolename))
-                self.set_password(desired_value)
+            if attribute == 'rolpassword':
+                if desired_value is False:
+                    logger.debug('Ignoring password for role "{}"'.format(self.rolename))
+                elif not self.is_same_password(desired_value):
+                    logger.debug('Altering password for role "{}"'.format(self.rolename))
+                    self.set_password(desired_value)
 
             if attribute == 'rolvaliduntil' \
                and is_valid_forever(desired_value) \
@@ -240,9 +249,10 @@ class AttributeAnalyzer(object):
     def set_password(self, desired_value):
         if desired_value is None:
             actual_query = Q_REMOVE_PASSWORD.format(self.rolename)
+            sanitized_query = Q_REMOVE_PASSWORD.format(self.rolename)
         else:
             actual_query = Q_ALTER_PASSWORD.format(self.rolename, desired_value)
-        self.password_sql_to_run.append(actual_query)
+            sanitized_query = Q_ALTER_PASSWORD.format(self.rolename, '******')
 
-        sanitized_query = Q_ALTER_PASSWORD.format(self.rolename, '******')
+        self.password_sql_to_run.append(actual_query)
         self.sql_to_run.append('--' + sanitized_query)
