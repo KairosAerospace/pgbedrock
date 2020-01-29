@@ -406,7 +406,7 @@ def get_spec_schemas(spec):
     return set(spec_schemas)
 
 
-def load_spec(spec_path, cursor, verbose, attributes, memberships, ownerships, privileges):
+def load_spec(spec_path, cursor, verbose, attributes, memberships, ownerships, privileges, attributes_source_table):
     """ Validate a spec passes various checks and, if so, return the loaded spec. """
     rendered_template = render_template(spec_path)
     unconverted_spec = yaml.load(rendered_template)
@@ -419,7 +419,7 @@ def load_spec(spec_path, cursor, verbose, attributes, memberships, ownerships, p
 
     spec = convert_spec_to_objectnames(unconverted_spec)
     verify_spec(rendered_template, spec, cursor, verbose, attributes, memberships,
-                ownerships, privileges)
+                ownerships, privileges, attributes_source_table)
     return spec
 
 
@@ -441,9 +441,9 @@ def render_template(path):
 
 
 def verify_spec(rendered_template, spec, cursor, verbose, attributes, memberships, ownerships,
-                privileges):
+                privileges, attributes_source_table):
     assert isinstance(spec, dict)
-    dbcontext = context.DatabaseContext(cursor, verbose)
+    dbcontext = context.DatabaseContext(cursor, verbose, attributes_source_table)
 
     error_messages = []
 

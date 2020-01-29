@@ -255,10 +255,11 @@ class DatabaseContext(object):
         'get_version_info',
     }
 
-    def __init__(self, cursor, verbose):
+    def __init__(self, cursor, verbose, attributes_source_table='pg_authid'):
         self.cursor = cursor
         self.verbose = verbose
         self._cache = dict()
+        self._attributes_source_table = attributes_source_table
 
     def __getattribute__(self, attr):
         """ If the requested attribute should be cached and hasn't, fetch it and cache it. """
