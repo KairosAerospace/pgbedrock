@@ -26,6 +26,8 @@ def analyze_ownerships(spec, cursor, verbose):
         for rolename, config in all_roles:
             if not config:
                 continue
+            if config.get('ignore', False):
+                continue
 
             if config.get('has_personal_schema'):
                 objname = common.ObjectName.from_str(rolename)
