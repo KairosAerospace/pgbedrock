@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  artifactorize:
+    docker:
+      - image: 137296740171.dkr.ecr.us-west-2.amazonaws.com/kairos-docker-build:no-rewrite-dash
+        aws_auth:
+          aws_access_key_id: $AWS_ACCESS_KEY_ID
+          aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+    working_directory: /opt/kairos/build-home/repo
+    steps:
+      - checkout
+      - run: kairos_container_init
+      - run: kairos_python_package
+      - run: kairos_python_deploy
+      - run: kairos_lambda_publish
+      - run: kairos_python_cleanup
+
+      - store_artifacts:
+          path: dist
+          destination: build-artifacts
+
+notify:
+  webhooks:
+    - url: https://bdoa77w3h0.execute-api.us-west-2.amazonaws.com/webhook/
+workflows:
+  version: 2
+  kastro-apache-airflow-workflow:
+    jobs:
+      - artifactorize:
+          context: org-global
