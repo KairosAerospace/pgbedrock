@@ -1,5 +1,16 @@
-pgbedrock
+KAIROS PGBEDROCK
 =========
+
+Making changes to this package.
+The only branch being published is kairos-release - it is a fork off of the v0.3.2 release tag. Make your changes there.
+
+CHANGES TO MASTER WILL NOT BE PUBLISHED
+
+Using this package
+This repository currently publishes a modified version of svgis-0.4.6 with Kairos patches applied.
+
+It is available in the Kairos pip repository under the same name, with the local version identifier kairos.<CIRCLE_BUILD_NUM> appended to the end. To use it in setup.py or requirements.txt, use pgbedrock-0.3.2+kairos.<CRICLE_BUILD_NUM> where <CIRCLE_BUILD_NUM> is the specific version desired. e.g. pgbedrock-0.3.2+kairos.1.
+
 |travis_ci| |coveralls| |postgres_versions| |pip_versions|
 
 .. |travis_ci| image:: https://travis-ci.org/Squarespace/pgbedrock.svg?branch=master

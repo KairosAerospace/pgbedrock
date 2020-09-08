@@ -27,7 +27,7 @@ required = [
 ]
 
 setup(
-    name='kairos-pgbedrock',
+    name='pgbedrock',
     description='Manage Postgres roles and privileges',
     long_description="Manage a Postgres cluster's roles, role memberships, role privileges, and schema ownership",
     version=get_version(),

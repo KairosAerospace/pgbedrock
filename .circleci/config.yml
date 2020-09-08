@@ -10,14 +10,22 @@ jobs:
     steps:
       - checkout
       - run: kairos_container_init
+      - run:
+          name: munge version
+          command: |
+            sed -i "s/0.3.2/0.3.2+kairos.${CIRCLE_BUILD_NUM}/" pgbedrock/__init.py__
       - run: kairos_python_package
-      - run: kairos_python_deploy
-      - run: kairos_lambda_publish
-      - run: kairos_python_cleanup
+      - run:
+          name: publish package
+          command: |
+            PYPIRC=/opt/kairos/etc/pypirc
+            TWINE="${KAIROS_DEPLOY_VENV:-/opt/kairos/util/deploy_venv}/bin/twine"
 
-      - store_artifacts:
-          path: dist
-          destination: build-artifacts
+            if [[ "${CIRCLE_BRANCH}" =~ ^(kairos-release)$ ]]; then
+              $TWINE upload -u $KAIROS_PUBLISH_USER -p $KAIROS_PUBLISH_API_KEY -r artifactory-python3 --config-file $PYPIRC ./dist/*
+            else
+              echo "No deployment configured for branch ${CIRCLE_BRANCH}"
+            fi
 
 notify:
   webhooks:
