@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: 137296740171.dkr.ecr.us-west-2.amazonaws.com/kairos-docker-build:no-rewrite-dash
+      - image: 137296740171.dkr.ecr.us-west-2.amazonaws.com/kairos-docker-build:production
         aws_auth:
           aws_access_key_id: $AWS_ACCESS_KEY_ID
           aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
@@ -32,7 +32,7 @@ notify:
     - url: https://bdoa77w3h0.execute-api.us-west-2.amazonaws.com/webhook/
 workflows:
   version: 2
-  kastro-apache-airflow-workflow:
+  kairos-workflow:
     jobs:
       - build:
           context: org-global
