@@ -13,7 +13,7 @@ jobs:
       - run:
           name: munge version
           command: |
-            sed -i "s/0.3.2/0.3.2+kairos.${CIRCLE_BUILD_NUM}/" pgbedrock/__init.py__
+            sed -i "s/0.3.2/0.3.2+kairos.${CIRCLE_BUILD_NUM}/" pgbedrock/__init__.py
       - run: kairos_python_package
       - run:
           name: publish package
